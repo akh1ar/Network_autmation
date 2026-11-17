@@ -1,0 +1,29 @@
+hostname Automation-Server
+
+ip link set eth0 up
+udhcpc -i eth0
+
+cat > /etc/apk/repositories <<'EOF'
+https://dl-cdn.alpinelinux.org/alpine/v3.24/main
+https://dl-cdn.alpinelinux.org/alpine/v3.24/community
+EOF
+
+apk update
+
+apk add python3 py3-pip py3-virtualenv git nano openssh-client
+
+python3 -m venv /root/netmiko-venv
+
+source /root/netmiko-venv/bin/activate
+
+python -m pip install --upgrade pip
+
+python -m pip install netmiko "paramiko==3.5.1"
+
+python -c "import netmiko, paramiko; print('Netmiko:', netmiko.__version__); print('Paramiko:', paramiko.__version__)"
+
+#for CSR device using Netconf protocol
+python -m pip install ncclient
+python3 -m pip install xmltodict
+
+
